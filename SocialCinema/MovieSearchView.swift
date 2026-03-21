@@ -9,22 +9,22 @@ import SwiftUI
 
 struct MovieSearchView: View {
     @Binding var path: NavigationPath
-    @State var movieSearchTitle: String = ""
+    @Binding var movieSearchTitle: String
     
     var body: some View {
         VStack {
             Text("Search for a movie")
-            TextField("What the heck", text: $movieSearchTitle)
+            TextField("Enter a movie title", text: $movieSearchTitle)
                 .padding()
                 .background(Color(.systemGray6))
                 .cornerRadius(8)
                 .disableAutocorrection(true)
                 .autocapitalization(.none)
-            NavigationLink("Search", value: 2).buttonStyle(.borderedProminent).padding()
+            NavigationLink("Search", value: 2).buttonStyle(.borderedProminent)
         }.padding()
     }
 }
 
 #Preview {
-    MovieSearchView(path: .constant(NavigationPath()))
+    MovieSearchView(path: .constant(NavigationPath()), movieSearchTitle: .constant("Project Hail Mary"))
 }
