@@ -21,7 +21,7 @@ struct ContentView: View {
                     }
                 
                 // Second Tab
-                Text("Second Tab Content")
+                FriendsListView(path: $path)
                     .tabItem {
                         Label("Friends", systemImage: "person")
                     }
