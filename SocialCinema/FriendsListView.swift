@@ -17,20 +17,33 @@ struct FriendCardView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.green)
         .cornerRadius(10)
     }
 }
 
 struct FriendsListView: View {
     @Binding var path: NavigationPath
-    let friendsList: [User] = [User(name: "Evan"), User(name: "Joe"), User(name: "Arav"), User(name: "Jackson")]
+    let testFriendsList: [User] = [User(name: "Evan"), User(name: "Joe"), User(name: "Arav"), User(name: "Jackson")]
     
     var body: some View {
+        // Add a friend button
+        // TODO: this adds two friend tabs to the contentView????/ Why????
+        // I think maybe each tab should have its own NavigationStack
+        /*Button("Add a Friend") {
+            
+        }.padding()
+            .frame(maxWidth: .infinity, alignment: .center)
+            .cornerRadius(10)
+            .buttonStyle(.borderedProminent)*/
+        
         // list of friends
         List {
-            ForEach(friendsList.indices, id: \.self) { index in
-                FriendCardView(friend: friendsList[index])
+            ForEach(testFriendsList.indices, id: \.self) { index in
+                NavigationLink() {
+                    FriendView(path: $path, friend: testFriendsList[index])
+                } label: {
+                    FriendCardView(friend: testFriendsList[index])
+                }
             }
         }
     }
