@@ -1,0 +1,5 @@
+# Folder metadata, not important
+.DS_Store
+
+# Ignore user-specific Xcode data
+xcuserdata/
