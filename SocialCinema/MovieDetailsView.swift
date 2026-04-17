@@ -12,14 +12,41 @@ struct MovieDetailsView: View {
     let movie: Movie
     
     var body: some View {
-        VStack {
-            Text("Title: \(movie.title)")
-            Text("Genre: \(movie.genre)")
-            Text("Synopsis: \(movie.synopsis)")
-        }.padding()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(movie.title)
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                if let releaseDate = movie.releaseDate, !releaseDate.isEmpty {
+                    Text("Release Date: \(releaseDate)")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                
+                Text("Overview")
+                    .font(.headline)
+                
+                Text(movie.overview.isEmpty ? "No overview available." : movie.overview)
+                    .font(.body)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding()
+        }
+        .navigationTitle("Movie Details")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    MovieDetailsView(path: .constant(NavigationPath()), movie: Movie(title: "Project Hail Mary", genre: "Sci-Fi", synopsis: "Science teacher Ryland Grace wakes up on a spaceship with no recollection of who he is or how he got there. As his memory slowly returns, he soon discovers he must solve the riddle behind a mysterious substance that's causing the sun to die out. As details of the mission unravel, he calls on his scientific training and sheer ingenuity -- but he may not have to do it alone."))
+    MovieDetailsView(
+        path: .constant(NavigationPath()),
+        movie: Movie(
+            id: 27205,
+            title: "Inception",
+            overview: "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life.",
+            posterPath: "/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg",
+            releaseDate: "2010-07-15"
+        )
+    )
 }
