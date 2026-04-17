@@ -20,7 +20,7 @@ struct MovieDetailsView: View {
                 
                 if let releaseDate = movie.releaseDate, !releaseDate.isEmpty {
                     Text("Release Date: \(releaseDate)")
-                        .font(.subheadline)
+                        .font(.subheadline) //test commit
                         .foregroundStyle(.secondary)
                 }
                 
