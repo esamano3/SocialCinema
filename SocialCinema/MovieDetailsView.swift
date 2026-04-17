@@ -25,9 +25,9 @@ struct MovieDetailsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 movieHeaderSection
-                divider
+                Divider()
                 locationSection
-                divider
+                Divider()
                 showtimesSection
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -120,9 +120,9 @@ struct MovieDetailsView: View {
             }
 
             if !showtimesViewModel.theaters.isEmpty {
-                LazyVStack(alignment: .leading, spacing: 12) {
+                LazyVStack(alignment: .leading, spacing: 14) {
                     ForEach(showtimesViewModel.theaters) { theater in
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: 10) {
                             Text(theater.name)
                                 .font(.headline)
 
@@ -136,15 +136,44 @@ struct MovieDetailsView: View {
                                     .foregroundStyle(.secondary)
                             }
 
-                            ForEach(theater.showing, id: \.self) { show in
-                                Text("\(show.type): \(show.time.joined(separator: ", "))")
-                                    .font(.caption)
+                            Divider()
+
+                            ForEach(theater.showing, id: \.self) { showing in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(showing.type)
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+
+                                    ForEach(showing.time, id: \.self) { time in
+                                        NavigationLink {
+                                            TheaterMapView(
+                                                theater: theater,
+                                                showType: showing.type,
+                                                selectedTime: time
+                                            )
+                                        } label: {
+                                            HStack {
+                                                Image(systemName: "mappin.and.ellipse")
+                                                Text(time)
+                                                Spacer()
+                                                Image(systemName: "chevron.right")
+                                                    .font(.caption)
+                                                    .foregroundStyle(.secondary)
+                                            }
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 10)
+                                            .background(Color(.systemGray6))
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                }
                             }
                         }
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(Color(.systemGray6))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
                 }
             } else if !showtimesViewModel.isLoading && showtimesViewModel.errorMessage == nil {
@@ -154,21 +183,19 @@ struct MovieDetailsView: View {
             }
         }
     }
-
-    private var divider: some View {
-        Divider()
-    }
 }
 
 #Preview {
-    MovieDetailsView(
-        path: .constant(NavigationPath()),
-        movie: Movie(
-            id: 27205,
-            title: "Inception",
-            overview: "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life.",
-            posterPath: "/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg",
-            releaseDate: "2010-07-15"
+    NavigationStack {
+        MovieDetailsView(
+            path: .constant(NavigationPath()),
+            movie: Movie(
+                id: 27205,
+                title: "Inception",
+                overview: "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life.",
+                posterPath: "/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg",
+                releaseDate: "2010-07-15"
+            )
         )
-    )
+    }
 }
