@@ -7,8 +7,18 @@
 
 import Foundation
 
-struct Movie {
+struct Movie: Identifiable, Codable, Hashable {
+    let id: Int
     let title: String
-    let genre: String
-    let synopsis: String
+    let overview: String
+    let posterPath: String?
+    let releaseDate: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case overview
+        case posterPath = "poster_path"
+        case releaseDate = "release_date"
+    }
 }
