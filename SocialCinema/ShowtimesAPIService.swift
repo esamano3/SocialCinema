@@ -1,10 +1,3 @@
-//
-//  ShowtimesAPIService.swift
-//  SocialCinema
-//
-//  Created by Joseph Loveall (Student) on 4/17/26.
-//
-
 import Foundation
 
 enum ShowtimesError: LocalizedError {
