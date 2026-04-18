@@ -13,6 +13,7 @@ struct MovieDetailsView: View {
 
     @StateObject private var locationManager = LocationManager()
     @StateObject private var showtimesViewModel = MovieShowtimesViewModel()
+    @StateObject private var reviewsViewModel = ReviewsViewModel()
 
     @State private var manualLocation: String = ""
 
@@ -25,6 +26,10 @@ struct MovieDetailsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 movieHeaderSection
+                Divider()
+                reviewComposerSection
+                Divider()
+                reviewsListSection
                 Divider()
                 locationSection
                 Divider()
@@ -39,6 +44,8 @@ struct MovieDetailsView: View {
             if locationManager.authorizationStatus == .notDetermined {
                 locationManager.requestPermission()
             }
+
+            reviewsViewModel.loadReviews(for: movie.id)
         }
     }
 
@@ -59,6 +66,89 @@ struct MovieDetailsView: View {
 
             Text(movie.overview.isEmpty ? "No overview available." : movie.overview)
                 .font(.body)
+        }
+    }
+
+    private var reviewComposerSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Write a Review")
+                .font(.title3)
+                .fontWeight(.semibold)
+
+            Text("Rating")
+                .font(.subheadline)
+                .fontWeight(.medium)
+
+            Picker("Rating", selection: $reviewsViewModel.rating) {
+                ForEach(1...5, id: \.self) { value in
+                    Text("\(value) Star\(value == 1 ? "" : "s")").tag(value)
+                }
+            }
+            .pickerStyle(.segmented)
+
+            Text("Your Review")
+                .font(.subheadline)
+                .fontWeight(.medium)
+
+            TextEditor(text: $reviewsViewModel.reviewText)
+                .frame(minHeight: 120)
+                .padding(8)
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            if !reviewsViewModel.errorMessage.isEmpty {
+                Text(reviewsViewModel.errorMessage)
+                    .foregroundStyle(.red)
+                    .font(.footnote)
+            }
+
+            Button("Submit Review") {
+                reviewsViewModel.submitReview(for: movie.id, movieTitle: movie.title)
+            }
+            .buttonStyle(.borderedProminent)
+        }
+    }
+
+    private var reviewsListSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Reviews")
+                .font(.headline)
+
+            if reviewsViewModel.isLoading {
+                ProgressView("Loading reviews...")
+            } else if reviewsViewModel.reviews.isEmpty {
+                Text("No reviews yet for this movie.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            } else {
+                LazyVStack(alignment: .leading, spacing: 12) {
+                    ForEach(reviewsViewModel.reviews) { review in
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text(review.userEmail)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+
+                                Spacer()
+
+                                Text(String(repeating: "★", count: review.rating))
+                                    .foregroundStyle(.yellow)
+                            }
+
+                            Text(review.reviewText)
+                                .font(.body)
+
+                            Text(review.createdAt.formatted(date: .abbreviated, time: .shortened))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(.systemGray6))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                }
+            }
         }
     }
 

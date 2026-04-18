@@ -17,7 +17,8 @@ enum ShowtimesError: LocalizedError {
 class ShowtimesAPIService {
     
     private let baseURL = "https://serpapi.com/search.json"
-    private let apiKey = "dummyToken" // temporary for testing
+    private let apiKey = "dummyToken"
+    // temporary for testing
     
     func fetchShowtimes(movieTitle: String, location: String, completion: @escaping (Result<[Theater], Error>) -> Void) {
         let query = "\(movieTitle) showtimes \(location)"

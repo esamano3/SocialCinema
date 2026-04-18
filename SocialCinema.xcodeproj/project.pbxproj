@@ -10,6 +10,8 @@
 		C2388A192F93FCC700843967 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C2388A182F93FCC700843967 /* FirebaseAuth */; };
 		C2388A1B2F93FCD100843967 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C2388A1A2F93FCD100843967 /* FirebaseFirestore */; };
 		C2388A1D2F93FCD800843967 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = C2388A1C2F93FCD800843967 /* FirebaseCore */; };
+		C2388A652F94092C00843967 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = C2388A642F94092C00843967 /* FirebaseFunctions */; };
+		C2388A672F94093000843967 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = C2388A662F94093000843967 /* FirebaseDatabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,9 +31,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2388A672F94093000843967 /* FirebaseDatabase in Frameworks */,
 				C2388A192F93FCC700843967 /* FirebaseAuth in Frameworks */,
 				C2388A1D2F93FCD800843967 /* FirebaseCore in Frameworks */,
 				C2388A1B2F93FCD100843967 /* FirebaseFirestore in Frameworks */,
+				C2388A652F94092C00843967 /* FirebaseFunctions in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +89,8 @@
 				C2388A182F93FCC700843967 /* FirebaseAuth */,
 				C2388A1A2F93FCD100843967 /* FirebaseFirestore */,
 				C2388A1C2F93FCD800843967 /* FirebaseCore */,
+				C2388A642F94092C00843967 /* FirebaseFunctions */,
+				C2388A662F94093000843967 /* FirebaseDatabase */,
 			);
 			productName = SocialCinema;
 			productReference = 315C9FC22F6F3E5400D6DE45 /* SocialCinema.app */;
@@ -372,6 +378,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C2388A162F93FCB300843967 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCore;
+		};
+		C2388A642F94092C00843967 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C2388A162F93FCB300843967 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
+		};
+		C2388A662F94093000843967 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C2388A162F93FCB300843967 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

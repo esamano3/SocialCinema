@@ -52,6 +52,9 @@ struct ContentView: View {
             .navigationDestination(for: Movie.self) { movie in
                 MovieDetailsView(path: $path, movie: movie)
             }
+            .navigationDestination(for: FriendUser.self) { friend in
+                FriendProfileView(friend: friend)
+            }
         }
     }
 }
