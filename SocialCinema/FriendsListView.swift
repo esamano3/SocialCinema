@@ -10,35 +10,43 @@ import SwiftUI
 struct FriendsListView: View {
     @Binding var path: NavigationPath
 
-    @State private var friends: [FriendUser] = [
-        FriendUser(
-            name: "Evan Samano",
-            email: "evan@example.com",
-            favoriteMovie: "Inception",
-            reviews: [
-                FriendMovieReview(movieTitle: "Inception", rating: 5, reviewText: "Still one of my all-time favorites."),
-                FriendMovieReview(movieTitle: "Interstellar", rating: 5, reviewText: "Amazing visuals and story.")
-            ]
-        ),
-        FriendUser(
-            name: "Mia Chen",
-            email: "mia@example.com",
-            favoriteMovie: "La La Land",
-            reviews: [
-                FriendMovieReview(movieTitle: "La La Land", rating: 4, reviewText: "Beautiful soundtrack and style."),
-                FriendMovieReview(movieTitle: "Dune", rating: 5, reviewText: "Huge scale and very immersive.")
-            ]
-        )
-    ]
-
-    @State private var newFriendName: String = ""
-    @State private var newFriendEmail: String = ""
+    @StateObject private var friendsViewModel = FriendsViewModel()
 
     var body: some View {
         VStack(spacing: 16) {
             addFriendSection
 
-            if friends.isEmpty {
+            if !friendsViewModel.incomingRequests.isEmpty {
+                incomingRequestsSection
+            }
+
+            if friendsViewModel.isLoading {
+                Spacer()
+                ProgressView("Loading friends...")
+                Spacer()
+            } else if !friendsViewModel.errorMessage.isEmpty && friendsViewModel.friends.isEmpty {
+                Spacer()
+                VStack(spacing: 12) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.system(size: 40))
+
+                    Text("Could not load friends")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+
+                    Text(friendsViewModel.errorMessage)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal)
+
+                    Button("Try Again") {
+                        friendsViewModel.loadFriends()
+                        friendsViewModel.loadIncomingRequests()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+                Spacer()
+            } else if friendsViewModel.friends.isEmpty {
                 Spacer()
 
                 VStack(spacing: 12) {
@@ -49,7 +57,7 @@ struct FriendsListView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
 
-                    Text("Add a friend to start building your SocialCinema circle.")
+                    Text("Search by email and send someone a friend request.")
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal)
@@ -59,53 +67,92 @@ struct FriendsListView: View {
             } else {
                 List {
                     Section("My Friends") {
-                        ForEach(friends) { friend in
+                        ForEach(friendsViewModel.friends) { friend in
                             NavigationLink(value: friend) {
                                 VStack(alignment: .leading, spacing: 6) {
-                                    Text(friend.name)
+                                    Text(friend.displayName)
                                         .font(.headline)
 
                                     Text(friend.email)
                                         .font(.subheadline)
                                         .foregroundStyle(.secondary)
-
-                                    Text("Favorite Movie: \(friend.favoriteMovie)")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
                                 }
                                 .padding(.vertical, 4)
                             }
+                            .swipeActions {
+                                Button(role: .destructive) {
+                                    friendsViewModel.removeFriend(friend)
+                                } label: {
+                                    Label("Remove", systemImage: "trash")
+                                }
+                            }
                         }
-                        .onDelete(perform: deleteFriend)
                     }
                 }
                 .listStyle(.insetGrouped)
             }
         }
         .navigationTitle("Friends")
+        .navigationDestination(for: AppUser.self) { friend in
+            FriendProfileView(friend: friend)
+        }
+        .onAppear {
+            friendsViewModel.loadFriends()
+            friendsViewModel.loadIncomingRequests()
+        }
     }
 
     private var addFriendSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Add Friend")
+            Text("Send Friend Request")
                 .font(.headline)
 
-            TextField("Friend name", text: $newFriendName)
-                .textFieldStyle(.roundedBorder)
-
-            TextField("Friend email", text: $newFriendEmail)
+            TextField("Enter friend email", text: $friendsViewModel.newFriendEmail)
                 .textFieldStyle(.roundedBorder)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
 
-            Button("Add Friend") {
-                addFriend()
+            Button("Search User") {
+                friendsViewModel.searchUsers()
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(
-                newFriendName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-                newFriendEmail.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            )
+            .buttonStyle(.bordered)
+
+            if !friendsViewModel.availableUsers.isEmpty {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Search Results")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+
+                    ForEach(friendsViewModel.availableUsers) { user in
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(user.displayName)
+                                    .font(.headline)
+
+                                Text(user.email)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+
+                            Button("Send Request") {
+                                friendsViewModel.sendFriendRequest(to: user)
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                }
+            }
+
+            if !friendsViewModel.errorMessage.isEmpty {
+                Text(friendsViewModel.errorMessage)
+                    .foregroundStyle(.red)
+                    .font(.footnote)
+            }
         }
         .padding()
         .background(Color(.systemGray6))
@@ -113,26 +160,39 @@ struct FriendsListView: View {
         .padding(.horizontal)
     }
 
-    private func addFriend() {
-        let trimmedName = newFriendName.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedEmail = newFriendEmail.trimmingCharacters(in: .whitespacesAndNewlines)
+    private var incomingRequestsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Incoming Requests")
+                .font(.headline)
+                .padding(.horizontal)
 
-        guard !trimmedName.isEmpty, !trimmedEmail.isEmpty else { return }
+            ForEach(friendsViewModel.incomingRequests) { request in
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(request.fromDisplayName)
+                        .font(.headline)
 
-        let friend = FriendUser(
-            name: trimmedName,
-            email: trimmedEmail,
-            favoriteMovie: "Unknown",
-            reviews: []
-        )
+                    Text(request.fromEmail)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
 
-        friends.append(friend)
-        newFriendName = ""
-        newFriendEmail = ""
-    }
+                    HStack {
+                        Button("Accept") {
+                            friendsViewModel.acceptRequest(request)
+                        }
+                        .buttonStyle(.borderedProminent)
 
-    private func deleteFriend(at offsets: IndexSet) {
-        friends.remove(atOffsets: offsets)
+                        Button("Decline") {
+                            friendsViewModel.declineRequest(request)
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding(.horizontal)
+            }
+        }
     }
 }
 

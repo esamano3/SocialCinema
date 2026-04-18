@@ -54,6 +54,10 @@ class ReviewsViewModel: ObservableObject {
             return
         }
 
+        loadReviews(forUserEmail: email)
+    }
+
+    func loadReviews(forUserEmail email: String) {
         isLoading = true
         errorMessage = ""
 
