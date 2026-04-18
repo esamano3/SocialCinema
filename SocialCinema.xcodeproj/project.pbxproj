@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C2388A192F93FCC700843967 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C2388A182F93FCC700843967 /* FirebaseAuth */; };
+		C2388A1B2F93FCD100843967 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C2388A1A2F93FCD100843967 /* FirebaseFirestore */; };
+		C2388A1D2F93FCD800843967 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = C2388A1C2F93FCD800843967 /* FirebaseCore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		315C9FC22F6F3E5400D6DE45 /* SocialCinema.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SocialCinema.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +29,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2388A192F93FCC700843967 /* FirebaseAuth in Frameworks */,
+				C2388A1D2F93FCD800843967 /* FirebaseCore in Frameworks */,
+				C2388A1B2F93FCD100843967 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +42,7 @@
 			isa = PBXGroup;
 			children = (
 				315C9FC42F6F3E5400D6DE45 /* SocialCinema */,
+				C2388A172F93FCC700843967 /* Frameworks */,
 				315C9FC32F6F3E5400D6DE45 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +53,13 @@
 				315C9FC22F6F3E5400D6DE45 /* SocialCinema.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C2388A172F93FCC700843967 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +82,9 @@
 			);
 			name = SocialCinema;
 			packageProductDependencies = (
+				C2388A182F93FCC700843967 /* FirebaseAuth */,
+				C2388A1A2F93FCD100843967 /* FirebaseFirestore */,
+				C2388A1C2F93FCD800843967 /* FirebaseCore */,
 			);
 			productName = SocialCinema;
 			productReference = 315C9FC22F6F3E5400D6DE45 /* SocialCinema.app */;
@@ -94,6 +114,9 @@
 			);
 			mainGroup = 315C9FB92F6F3E5400D6DE45;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C2388A162F93FCB300843967 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 315C9FC32F6F3E5400D6DE45 /* Products */;
 			projectDirPath = "";
@@ -322,6 +345,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C2388A162F93FCB300843967 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.12.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C2388A182F93FCC700843967 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C2388A162F93FCB300843967 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		C2388A1A2F93FCD100843967 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C2388A162F93FCB300843967 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		C2388A1C2F93FCD800843967 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C2388A162F93FCB300843967 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 315C9FBA2F6F3E5400D6DE45 /* Project object */;
 }
