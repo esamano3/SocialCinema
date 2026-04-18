@@ -40,9 +40,7 @@ struct MovieSearchView: View {
             }
 
             List(viewModel.movies) { movie in
-                Button {
-                    path.append(movie)
-                } label: {
+                NavigationLink(value: movie) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(movie.title)
                             .font(.headline)
