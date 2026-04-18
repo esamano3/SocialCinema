@@ -60,6 +60,23 @@ struct MovieDetailsView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
+            
+            // movie image / poster
+            if let posterPath: String = movie.posterPath {
+                // base_url + size + poster_path
+                let posterURL: String = "https://image.tmdb.org/t/p/" + "w342" + posterPath
+                AsyncImage(url: URL(string: posterURL)) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .aspectRatio(contentMode: .fit)
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(width: 200, height: 200)
+            }
+            
 
             Text("Overview")
                 .font(.headline)

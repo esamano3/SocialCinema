@@ -92,10 +92,6 @@ struct FriendsListView: View {
                 .listStyle(.insetGrouped)
             }
         }
-        .navigationTitle("Friends")
-        .navigationDestination(for: AppUser.self) { friend in
-            FriendProfileView(friend: friend)
-        }
         .onAppear {
             friendsViewModel.loadFriends()
             friendsViewModel.loadIncomingRequests()
